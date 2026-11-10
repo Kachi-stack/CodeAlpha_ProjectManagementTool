@@ -1,0 +1,6 @@
+node_modules/
+.npm-cache/
+pmt.db
+pmt.db-shm
+pmt.db-wal
+.env

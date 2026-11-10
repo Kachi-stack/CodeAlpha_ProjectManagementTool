@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fc">
+    <title>Flowboard | Project Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main id="auth-screen" class="auth-screen">
+        <section class="auth-card">
+            <a class="brand" href="/" aria-label="Flowboard home"><span class="brand-mark">F</span> Flowboard</a>
+            <p class="eyebrow">PROJECTS, IN SYNC</p>
+            <h1 id="auth-title">Welcome back</h1>
+            <p id="auth-intro" class="muted">Sign in to continue to your workspace.</p>
+            <p id="auth-message" class="message" role="status" aria-live="polite"></p>
+
+            <form id="login-form" class="stack-form">
+                <label for="login-email">Email address</label>
+                <input id="login-email" name="email" type="email" autocomplete="email" required>
+                <label for="login-password">Password</label>
+                <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+                <button class="button button-primary" type="submit">Sign in</button>
+            </form>
+            <form id="register-form" class="stack-form" hidden>
+                <label for="register-name">Your name</label>
+                <input id="register-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+                <label for="register-email">Email address</label>
+                <input id="register-email" name="email" type="email" autocomplete="email" required>
+                <label for="register-password">Password</label>
+                <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+                <small>Use at least 8 characters.</small>
+                <button class="button button-primary" type="submit">Create account</button>
+            </form>
+            <p class="auth-switch"><span id="auth-switch-copy">Don't have an account?</span> <button id="auth-switch-button" class="link-button" type="button">Create one</button></p>
+        </section>
+    </main>
+
+    <div id="app-screen" class="app-shell" hidden>
+        <header class="topbar">
+            <a class="brand" href="/"><span class="brand-mark">F</span> Flowboard</a>
+            <div class="topbar-right">
+                <span id="current-user" class="current-user"></span>
+                <button id="logout-button" class="button button-quiet" type="button">Sign out</button>
+            </div>
+        </header>
+
+        <div class="workspace">
+            <aside class="sidebar">
+                <div class="sidebar-heading"><span>WORKSPACES</span><button id="new-project-button" class="icon-button" type="button" aria-label="Create project" title="Create project">+</button></div>
+                <div id="project-list" class="project-list"></div>
+                <div class="sidebar-note">Invite teammates by email to collaborate on a project.</div>
+            </aside>
+
+            <main class="main-content">
+                <section id="welcome-panel" class="welcome-panel">
+                    <div class="welcome-icon">✦</div>
+                    <p class="eyebrow">YOUR TEAM'S WORKSPACE</p>
+                    <h1>Make good work happen.</h1>
+                    <p class="muted">Create a project board, organize tasks, and keep conversations beside the work.</p>
+                    <button id="welcome-create-button" class="button button-primary" type="button">Create your first project</button>
+                </section>
+
+                <section id="project-panel" class="project-panel" hidden>
+                    <div class="project-heading">
+                        <div>
+                            <p class="eyebrow">PROJECT BOARD</p>
+                            <h1 id="project-title"></h1>
+                            <p id="project-description" class="muted"></p>
+                        </div>
+                        <div class="project-actions">
+                            <span id="member-count" class="member-count"></span>
+                            <button id="invite-button" class="button button-secondary" type="button">Invite teammate</button>
+                            <button id="new-task-button" class="button button-primary" type="button">＋ Add task</button>
+                        </div>
+                    </div>
+                    <p id="board-message" class="message" role="status" aria-live="polite"></p>
+                    <div id="task-board" class="task-board"></div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <dialog id="project-dialog" class="dialog-card">
+        <form id="project-form" class="stack-form">
+            <div class="dialog-heading"><div><p class="eyebrow">NEW WORKSPACE</p><h2>Create a project</h2></div><button class="icon-button" type="button" data-close="project-dialog" aria-label="Close">×</button></div>
+            <label for="project-name">Project name</label>
+            <input id="project-name" name="name" maxlength="120" required placeholder="Website redesign">
+            <label for="project-description-input">Description <span class="optional">(optional)</span></label>
+            <textarea id="project-description-input" name="description" maxlength="500" rows="3" placeholder="What is the team working on?"></textarea>
+            <p id="project-form-message" class="message" role="status"></p>
+            <div class="dialog-actions"><button class="button button-secondary" type="button" data-close="project-dialog">Cancel</button><button class="button button-primary" type="submit">Create project</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="task-dialog" class="dialog-card">
+        <form id="task-form" class="stack-form">
+            <div class="dialog-heading"><div><p class="eyebrow">PROJECT WORK</p><h2>Add a task</h2></div><button class="icon-button" type="button" data-close="task-dialog" aria-label="Close">×</button></div>
+            <label for="task-title">Task title</label>
+            <input id="task-title" name="title" maxlength="160" required placeholder="Draft the homepage copy">
+            <label for="task-description">Details <span class="optional">(optional)</span></label>
+            <textarea id="task-description" name="description" maxlength="2000" rows="3" placeholder="Add useful context for the team"></textarea>
+            <div class="form-row">
+                <div><label for="task-assignee">Assign to</label><select id="task-assignee" name="assigneeId"></select></div>
+                <div><label for="task-due-date">Due date <span class="optional">(optional)</span></label><input id="task-due-date" name="dueDate" type="date"></div>
+            </div>
+            <p id="task-form-message" class="message" role="status"></p>
+            <div class="dialog-actions"><button class="button button-secondary" type="button" data-close="task-dialog">Cancel</button><button class="button button-primary" type="submit">Add task</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="invite-dialog" class="dialog-card">
+        <form id="invite-form" class="stack-form">
+            <div class="dialog-heading"><div><p class="eyebrow">GROW YOUR TEAM</p><h2>Invite a teammate</h2></div><button class="icon-button" type="button" data-close="invite-dialog" aria-label="Close">×</button></div>
+            <p class="muted small-copy">They need to create an account first. Enter the email they used to sign up.</p>
+            <label for="invite-email">Teammate's email</label>
+            <input id="invite-email" name="email" type="email" required placeholder="teammate@example.com">
+            <p id="invite-form-message" class="message" role="status"></p>
+            <div class="dialog-actions"><button class="button button-secondary" type="button" data-close="invite-dialog">Cancel</button><button class="button button-primary" type="submit">Add teammate</button></div>
+        </form>
+    </dialog>
+
+    <dialog id="task-details-dialog" class="dialog-card task-details-dialog">
+        <div class="task-detail-content">
+            <div class="dialog-heading"><div><p class="eyebrow">TASK DETAILS</p><h2 id="detail-task-title"></h2></div><button class="icon-button" type="button" data-close="task-details-dialog" aria-label="Close">×</button></div>
+            <p id="detail-task-description" class="task-description"></p>
+            <div class="detail-fields">
+                <div><span class="field-label">Status</span><select id="detail-task-status"><option value="todo">To do</option><option value="in_progress">In progress</option><option value="done">Done</option></select></div>
+                <div><span class="field-label">Assignee</span><select id="detail-task-assignee"></select></div>
+                <div><span class="field-label">Due date</span><span id="detail-task-due"></span></div>
+            </div>
+            <section class="comments-section">
+                <h3>Conversation</h3>
+                <div id="comment-list" class="comment-list"></div>
+                <form id="comment-form" class="comment-form"><label class="sr-only" for="comment-input">Write a comment</label><textarea id="comment-input" name="body" rows="2" maxlength="2000" required placeholder="Share an update or ask a question…"></textarea><button class="button button-primary" type="submit">Comment</button></form>
+            </section>
+            <div class="dialog-actions detail-actions"><button id="delete-task-button" class="button button-danger" type="button">Delete task</button><button class="button button-secondary" type="button" data-close="task-details-dialog">Close</button></div>
+        </div>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+</html>
